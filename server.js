@@ -24,7 +24,7 @@ function loadApiKeys() {
     huggingfaceToken: process.env.HUGGINGFACE_TOKEN || fileKeys.huggingfaceToken || "",
     groqApiKey: process.env.GROQ_API_KEY || fileKeys.groqApiKey || "",
     openaiApiKey: process.env.OPENAI_API_KEY || fileKeys.openaiApiKey || "",
-    googleClientId: process.env.GOOGLE_CLIENT_ID || fileKeys.googleClientId || "",
+    googleClientId: process.env.GOOGLE_CLIENT_ID || fileKeys.googleClientId || "191735130109-g1nrl8ti70gpj7k34ttka08t8ftoo39k.apps.googleusercontent.com",
     adsenseClientId: process.env.ADSENSE_CLIENT_ID || fileKeys.adsenseClientId || "",
     merchantUpiId: process.env.MERCHANT_UPI_ID || fileKeys.merchantUpiId || "yashlimbasiya1234-2@okaxis",
     merchantName: process.env.MERCHANT_NAME || fileKeys.merchantName || "AetherAI Studio",

@@ -883,7 +883,7 @@ LIMIT 10;`,
   /* ---------------------------------------------------
      14. Account Auth, Google Sign-In, Credits & Direct UPI
   --------------------------------------------------- */
-  let GOOGLE_CLIENT_ID = "";
+  let GOOGLE_CLIENT_ID = "191735130109-g1nrl8ti70gpj7k34ttka08t8ftoo39k.apps.googleusercontent.com";
   let serverConfigured = { gemini: false, huggingface: false, groq: false, openai: false, googleLogin: false, adsense: false };
   let paymentConfig = { upiId: "yashlimbasiya1234-2@okaxis", merchantName: "AetherAI Studio", bankInfo: "" };
 
@@ -1019,6 +1019,7 @@ LIMIT 10;`,
     }
   }
 
+  initGoogleSignIn(GOOGLE_CLIENT_ID);
   loadPublicConfig();
 
   const upgradeModal = $("#upgradeModal");
