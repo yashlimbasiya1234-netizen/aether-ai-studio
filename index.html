@@ -1279,18 +1279,48 @@ Edit this text or pick a quick template below and click Download Real PDF!</text
           <strong id="modalPlanAmount">₹199</strong>
           <span id="modalPlanCycle">Monthly</span>
         </div>
-        <span class="mini-badge">UPI • Cards • NetBanking</span>
+        <span class="mini-badge">UPI • Bank • Razorpay</span>
       </div>
 
-      <form id="razorpayForm" class="upgrade-form">
+      <div class="auth-tabs" id="payMethodTabs">
+        <button type="button" class="auth-tab active" data-pay-tab="upi">📱 Direct UPI / Bank</button>
+        <button type="button" class="auth-tab" data-pay-tab="razorpay">💳 Razorpay / Cards</button>
+      </div>
+
+      <!-- Direct UPI & Bank Account Payment Panel -->
+      <div id="payPanelUpi">
+        <div class="upi-box">
+          <div class="output-bar" style="margin-bottom: 6px;">
+            <span class="output-title">Pay Directly to UPI / Bank</span>
+            <button type="button" class="copy-btn" id="copyUpiBtn">Copy UPI</button>
+          </div>
+          <p class="upi-id-line" id="displayUpiId">UPI ID: Not configured yet (set MERCHANT_UPI_ID in Render Environment)</p>
+          <p class="upi-bank-line" id="displayBankInfo" style="display: none;"></p>
+          <a href="#" id="upiDeepLinkBtn" class="btn btn-glass btn-full" style="margin-top: 10px; display: none;">
+            <span>📲 Open GPay / PhonePe / Paytm →</span>
+          </a>
+        </div>
+
+        <form id="upiManualForm" class="upgrade-form" style="margin-top: 12px;">
+          <label class="field-label" for="utrInput">Enter 12-Digit UPI / Bank UTR Reference Number</label>
+          <input id="utrInput" type="text" class="studio-input" placeholder="e.g., 432819204812" minlength="6" required />
+
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 12px;">
+            <span>Verify Payment &amp; Activate Pro →</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Razorpay Checkout Panel -->
+      <form id="razorpayForm" class="upgrade-form" style="display: none;">
         <label class="field-label" for="checkoutName">Your Name</label>
         <input id="checkoutName" type="text" class="studio-input" placeholder="e.g., Aarav Patel" required />
 
         <label class="field-label" for="checkoutEmail" style="margin-top: 12px;">Email for Pro License Key</label>
         <input id="checkoutEmail" type="email" class="studio-input" placeholder="you@example.com" required />
 
-        <div class="rzp-note">
-          🔒 Powered by <strong>Razorpay Checkout</strong>. (Demo mode active — replace <code>RAZORPAY_KEY_ID</code> in <code>app.js</code> when going live.)
+        <div class="rzp-note" id="rzpStatusNote">
+          🔒 Powered by <strong>Razorpay Checkout</strong>. Set <code>RAZORPAY_KEY_ID</code> in Render Environment for live Card/UPI gateway.
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" style="margin-top: 14px;">

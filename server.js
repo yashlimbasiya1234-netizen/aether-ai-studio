@@ -26,6 +26,9 @@ function loadApiKeys() {
     openaiApiKey: process.env.OPENAI_API_KEY || fileKeys.openaiApiKey || "",
     razorpayKeyId: process.env.RAZORPAY_KEY_ID || fileKeys.razorpayKeyId || "",
     adsenseClientId: process.env.ADSENSE_CLIENT_ID || fileKeys.adsenseClientId || "",
+    merchantUpiId: process.env.MERCHANT_UPI_ID || fileKeys.merchantUpiId || "",
+    merchantName: process.env.MERCHANT_NAME || fileKeys.merchantName || "AetherAI Studio",
+    bankAccountInfo: process.env.BANK_ACCOUNT_INFO || fileKeys.bankAccountInfo || "",
   };
 }
 
@@ -38,6 +41,9 @@ function saveApiKeys(partial) {
     openaiApiKey: typeof partial.openaiApiKey === "string" ? partial.openaiApiKey.trim() : curr.openaiApiKey,
     razorpayKeyId: typeof partial.razorpayKeyId === "string" ? partial.razorpayKeyId.trim() : curr.razorpayKeyId,
     adsenseClientId: typeof partial.adsenseClientId === "string" ? partial.adsenseClientId.trim() : curr.adsenseClientId,
+    merchantUpiId: typeof partial.merchantUpiId === "string" ? partial.merchantUpiId.trim() : curr.merchantUpiId,
+    merchantName: typeof partial.merchantName === "string" ? partial.merchantName.trim() : curr.merchantName,
+    bankAccountInfo: typeof partial.bankAccountInfo === "string" ? partial.bankAccountInfo.trim() : curr.bankAccountInfo,
   };
   fs.writeFileSync(KEYS_PATH, JSON.stringify(next, null, 2));
   return next;
@@ -301,7 +307,7 @@ const server = http.createServer(async (req, res) => {
         if (!user) {
           return sendJson(res, 401, { error: "Please login first before upgrading.", code: "AUTH_REQUIRED" });
         }
-        const { planName, amount, paymentId } = await readJsonBody(req);
+        const { planName, amount, paymentId, paymentMethod } = await readJsonBody(req);
         const normalized = String(planName || "").toLowerCase().includes("lifetime") ? "lifetime" : "pro";
 
         user.plan = normalized;
@@ -309,6 +315,7 @@ const server = http.createServer(async (req, res) => {
         user.lastPayment = {
           planName: planName || "Pro Creator",
           amount: Number(amount || 199),
+          paymentMethod: paymentMethod || "razorpay",
           paymentId: paymentId || `demo_${crypto.randomBytes(6).toString("hex")}`,
         };
         saveDB(db);
@@ -320,6 +327,11 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 200, {
           razorpayKeyId: keys.razorpayKeyId,
           adsenseClientId: keys.adsenseClientId,
+          paymentConfig: {
+            upiId: keys.merchantUpiId,
+            merchantName: keys.merchantName,
+            bankInfo: keys.bankAccountInfo,
+          },
           configured: {
             gemini: Boolean(keys.geminiApiKey),
             huggingface: Boolean(keys.huggingfaceToken),

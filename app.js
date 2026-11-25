@@ -885,6 +885,37 @@ LIMIT 10;`,
   --------------------------------------------------- */
   let RAZORPAY_KEY_ID = "rzp_test_REPLACE_WITH_YOUR_KEY";
   let serverConfigured = { gemini: false, huggingface: false, groq: false, openai: false, razorpay: false, adsense: false };
+  let paymentConfig = { upiId: "", merchantName: "AetherAI Studio", bankInfo: "" };
+
+  function refreshUpiCheckoutBox() {
+    const upiLine = $("#displayUpiId");
+    const bankLine = $("#displayBankInfo");
+    const deepLinkBtn = $("#upiDeepLinkBtn");
+    const copyBtn = $("#copyUpiBtn");
+
+    if (paymentConfig.upiId) {
+      if (upiLine) upiLine.textContent = `UPI ID: ${paymentConfig.upiId}`;
+      if (copyBtn) copyBtn.style.display = "inline-block";
+      if (deepLinkBtn) {
+        const upiUrl = `upi://pay?pa=${encodeURIComponent(paymentConfig.upiId)}&pn=${encodeURIComponent(paymentConfig.merchantName || "AetherAI Studio")}&am=${encodeURIComponent(selectedPlan.amount)}&cu=INR&tn=${encodeURIComponent(selectedPlan.name)}`;
+        deepLinkBtn.href = upiUrl;
+        deepLinkBtn.style.display = "inline-flex";
+      }
+    } else {
+      if (upiLine) upiLine.textContent = "UPI ID: Not set yet (add MERCHANT_UPI_ID in Render Environment)";
+      if (copyBtn) copyBtn.style.display = "none";
+      if (deepLinkBtn) deepLinkBtn.style.display = "none";
+    }
+
+    if (bankLine) {
+      if (paymentConfig.bankInfo) {
+        bankLine.textContent = `Bank Transfer: ${paymentConfig.bankInfo}`;
+        bankLine.style.display = "block";
+      } else {
+        bankLine.style.display = "none";
+      }
+    }
+  }
 
   function injectExternalScriptOnce(id, src, attrs = {}) {
     if (document.getElementById(id)) return;
@@ -914,6 +945,10 @@ LIMIT 10;`,
       }
       if (data.configured) {
         serverConfigured = data.configured;
+      }
+      if (data.paymentConfig) {
+        paymentConfig = data.paymentConfig;
+        refreshUpiCheckoutBox();
       }
     } catch {
       // ignore when opened via file://
@@ -1232,6 +1267,7 @@ LIMIT 10;`,
     const checkoutEmail = $("#checkoutEmail");
     if (checkoutName) checkoutName.value = currentUser.name;
     if (checkoutEmail) checkoutEmail.value = currentUser.email;
+    refreshUpiCheckoutBox();
 
     upgradeModal?.classList.add("open");
     upgradeModal?.setAttribute("aria-hidden", "false");
@@ -1263,7 +1299,7 @@ LIMIT 10;`,
     }
   });
 
-  async function finalizeServerUpgrade(paymentId = "") {
+  async function finalizeServerUpgrade(paymentId = "", paymentMethod = "razorpay") {
     try {
       const res = await fetch("/api/billing/upgrade", {
         method: "POST",
@@ -1275,6 +1311,7 @@ LIMIT 10;`,
           planName: selectedPlan.name,
           amount: selectedPlan.amount,
           paymentId,
+          paymentMethod,
         }),
       });
       const data = await res.json();
@@ -1291,6 +1328,35 @@ LIMIT 10;`,
     }
   }
 
+  $$("[data-pay-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.payTab;
+      $$("[data-pay-tab]").forEach((b) => b.classList.toggle("active", b === btn));
+      if ($("#payPanelUpi")) $("#payPanelUpi").style.display = tab === "upi" ? "block" : "none";
+      if (razorpayForm) razorpayForm.style.display = tab === "razorpay" ? "block" : "none";
+    });
+  });
+
+  $("#copyUpiBtn")?.addEventListener("click", async () => {
+    if (!paymentConfig.upiId) return;
+    try {
+      await navigator.clipboard.writeText(paymentConfig.upiId);
+      showToast(`Copied UPI ID: ${paymentConfig.upiId}`);
+    } catch {
+      showToast(paymentConfig.upiId);
+    }
+  });
+
+  $("#upiManualForm")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const utr = ($("#utrInput")?.value || "").trim();
+    if (utr.length < 6) {
+      showToast("Enter a valid UTR / Transaction ID");
+      return;
+    }
+    finalizeServerUpgrade(`UTR:${utr}`, "upi");
+  });
+
   razorpayForm?.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = ($("#checkoutName")?.value || "").trim();
@@ -1305,14 +1371,14 @@ LIMIT 10;`,
         description: `${selectedPlan.name} (${selectedPlan.cycle})`,
         prefill: { name, email },
         handler: (response) => {
-          finalizeServerUpgrade(response?.razorpay_payment_id || "");
+          finalizeServerUpgrade(response?.razorpay_payment_id || "", "razorpay");
         },
       });
       rzp.open();
       return;
     }
 
-    finalizeServerUpgrade();
+    finalizeServerUpgrade("", "demo");
   });
 
   syncAuthState();
