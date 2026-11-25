@@ -2008,6 +2008,26 @@ h1, h2, h3, .brand-name {
   color: var(--text-muted);
 }
 
+.auth-link-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.auth-link-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.auth-link-btn:hover {
+  text-decoration: underline;
+}
+
 /* =====================================================
    PDF Maker Preview & Smart Calculator Hub
    ===================================================== */

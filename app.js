@@ -1017,8 +1017,18 @@ LIMIT 10;`,
     updateAccountUI();
   }
 
+  const forgotView = $("#forgotView");
+  const forgotRequestForm = $("#forgotRequestForm");
+  const forgotResetForm = $("#forgotResetForm");
+  const resetCodeBanner = $("#resetCodeBanner");
+  const authTabsWrap = $(".auth-tabs");
+  let pendingResetEmail = "";
+
   function setAuthMode(mode) {
     authMode = mode;
+    if (authForm) authForm.style.display = "block";
+    if (forgotView) forgotView.style.display = "none";
+    if (authTabsWrap) authTabsWrap.style.display = "grid";
     $$(".auth-tab").forEach((t) => t.classList.toggle("active", t.dataset.authMode === mode));
     const isReg = mode === "register";
     if (authNameWrap) authNameWrap.style.display = isReg ? "block" : "none";
@@ -1028,13 +1038,83 @@ LIMIT 10;`,
     if (authSubmitBtn) authSubmitBtn.querySelector("span").textContent = isReg ? "Create Account →" : "Login →";
   }
 
+  function showForgotView() {
+    if (authForm) authForm.style.display = "none";
+    if (authTabsWrap) authTabsWrap.style.display = "none";
+    if (forgotView) forgotView.style.display = "block";
+    if (forgotRequestForm) forgotRequestForm.style.display = "block";
+    if (forgotResetForm) forgotResetForm.style.display = "none";
+    if (authModalTitle) authModalTitle.textContent = "Reset Your Password";
+    const typedEmail = ($("#authEmail")?.value || "").trim();
+    if (typedEmail && $("#forgotEmail")) $("#forgotEmail").value = typedEmail;
+    setTimeout(() => $("#forgotEmail")?.focus(), 40);
+  }
+
   function openAuthModal(mode = "login", customHint = "") {
     setAuthMode(mode);
-    if (authHint && customHint) authHint.textContent = customHint;
+    if (authHint) {
+      authHint.textContent = customHint || "Sign in to sync your 5 daily free credits or unlock Pro.";
+    }
     authModal?.classList.add("open");
     authModal?.setAttribute("aria-hidden", "false");
     setTimeout(() => $("#authEmail")?.focus(), 40);
   }
+
+  $("#forgotPassBtn")?.addEventListener("click", showForgotView);
+  $("#backToLoginBtn")?.addEventListener("click", () => setAuthMode("login"));
+
+  forgotRequestForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = ($("#forgotEmail")?.value || "").trim();
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || "Could not send reset code");
+        return;
+      }
+      pendingResetEmail = email;
+      if (forgotRequestForm) forgotRequestForm.style.display = "none";
+      if (forgotResetForm) forgotResetForm.style.display = "block";
+      if (resetCodeBanner) {
+        resetCodeBanner.textContent = data.demoCode
+          ? `Your 6-digit verification code: ${data.demoCode} (valid for 10 min)`
+          : "Check your email for the 6-digit reset code.";
+      }
+      showToast("Reset code generated!");
+    } catch {
+      showToast("Server error — please try again.");
+    }
+  });
+
+  forgotResetForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const code = ($("#resetCodeInput")?.value || "").trim();
+    const newPassword = $("#resetNewPassword")?.value || "";
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: pendingResetEmail, code, newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || "Reset failed");
+        return;
+      }
+      if ($("#authEmail")) $("#authEmail").value = pendingResetEmail;
+      if ($("#authPassword")) $("#authPassword").value = "";
+      forgotResetForm.reset();
+      setAuthMode("login");
+      showToast("Password updated! Please login.");
+    } catch {
+      showToast("Server error — please try again.");
+    }
+  });
 
   function closeAuthModal() {
     authModal?.classList.remove("open");
@@ -1139,7 +1219,7 @@ LIMIT 10;`,
   function openUpgradeModal(planName = "Pro Creator", amount = 199, cycle = "Monthly") {
     if (!currentUser) {
       pendingUpgradePlan = { name: planName, amount, cycle };
-      openAuthModal("login", `Pela Login ke Free Account banavo — pachi "${planName}" activate thase!`);
+      openAuthModal("login", `Sign in or create a free account to activate ${planName}.`);
       return;
     }
 

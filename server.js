@@ -234,6 +234,48 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 200, { user: sanitizeUser(user) });
       }
 
+      if (cleanUrl === "/api/auth/forgot-password" && req.method === "POST") {
+        const { email } = await readJsonBody(req);
+        const cleanEmail = String(email || "").trim().toLowerCase();
+        const user = db.users.find((u) => u.email === cleanEmail);
+        if (!user) {
+          return sendJson(res, 404, { error: "No account found with this email." });
+        }
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        user.resetCode = code;
+        user.resetExpiresAt = Date.now() + 10 * 60 * 1000;
+        saveDB(db);
+        return sendJson(res, 200, {
+          ok: true,
+          message: "Reset code generated! Enter the 6-digit code below.",
+          demoCode: code,
+        });
+      }
+
+      if (cleanUrl === "/api/auth/reset-password" && req.method === "POST") {
+        const { email, code, newPassword } = await readJsonBody(req);
+        const cleanEmail = String(email || "").trim().toLowerCase();
+        const cleanCode = String(code || "").trim();
+        const cleanPass = String(newPassword || "");
+
+        const user = db.users.find((u) => u.email === cleanEmail);
+        if (!user || !user.resetCode || user.resetCode !== cleanCode) {
+          return sendJson(res, 400, { error: "Invalid reset code or email." });
+        }
+        if (Date.now() > Number(user.resetExpiresAt || 0)) {
+          return sendJson(res, 400, { error: "Reset code expired. Request a new code." });
+        }
+        if (cleanPass.length < 4) {
+          return sendJson(res, 400, { error: "New password must be at least 4 characters." });
+        }
+
+        user.passwordHash = hashPassword(cleanPass);
+        delete user.resetCode;
+        delete user.resetExpiresAt;
+        saveDB(db);
+        return sendJson(res, 200, { ok: true, message: "Password updated! You can login now." });
+      }
+
       if (cleanUrl === "/api/credits/use" && req.method === "POST") {
         const user = getAuthUser(req, db);
         if (!user) return sendJson(res, 401, { error: "Login required", code: "AUTH_REQUIRED" });

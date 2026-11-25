@@ -1217,12 +1217,46 @@ Edit this text or pick a quick template below and click Download Real PDF!</text
         <label class="field-label" for="authPassword" style="margin-top: 12px;">Password</label>
         <input id="authPassword" type="password" class="studio-input" placeholder="Minimum 4 characters" minlength="4" required />
 
-        <p class="auth-hint" id="authHint">Login to get 5 free daily AI credits — or upgrade to Pro for unlimited access!</p>
+        <div class="auth-link-row">
+          <button type="button" class="auth-link-btn" id="forgotPassBtn">Forgot Password?</button>
+        </div>
+
+        <p class="auth-hint" id="authHint">Sign in to sync your 5 daily free credits or unlock Pro.</p>
 
         <button type="submit" class="btn btn-primary btn-full" id="authSubmitBtn" style="margin-top: 14px;">
           <span>Login →</span>
         </button>
       </form>
+
+      <!-- Forgot / Reset Password View -->
+      <div id="forgotView" style="display: none;">
+        <form id="forgotRequestForm" class="upgrade-form">
+          <label class="field-label" for="forgotEmail">Registered Email Address</label>
+          <input id="forgotEmail" type="email" class="studio-input" placeholder="you@example.com" required />
+
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 14px;">
+            <span>Send Reset Code →</span>
+          </button>
+        </form>
+
+        <form id="forgotResetForm" class="upgrade-form" style="display: none; margin-top: 12px;">
+          <div class="rzp-note" id="resetCodeBanner" style="margin-top: 0; margin-bottom: 12px;"></div>
+
+          <label class="field-label" for="resetCodeInput">6-Digit Reset Code</label>
+          <input id="resetCodeInput" type="text" class="studio-input" placeholder="e.g., 482910" required />
+
+          <label class="field-label" for="resetNewPassword" style="margin-top: 12px;">New Password</label>
+          <input id="resetNewPassword" type="password" class="studio-input" placeholder="Minimum 4 characters" minlength="4" required />
+
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 14px;">
+            <span>Update Password →</span>
+          </button>
+        </form>
+
+        <div class="auth-link-row" style="margin-top: 12px;">
+          <button type="button" class="auth-link-btn" id="backToLoginBtn">← Back to Login</button>
+        </div>
+      </div>
     </div>
   </div>
 
