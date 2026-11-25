@@ -24,7 +24,7 @@ function loadApiKeys() {
     huggingfaceToken: process.env.HUGGINGFACE_TOKEN || fileKeys.huggingfaceToken || "",
     groqApiKey: process.env.GROQ_API_KEY || fileKeys.groqApiKey || "",
     openaiApiKey: process.env.OPENAI_API_KEY || fileKeys.openaiApiKey || "",
-    razorpayKeyId: process.env.RAZORPAY_KEY_ID || fileKeys.razorpayKeyId || "",
+    googleClientId: process.env.GOOGLE_CLIENT_ID || fileKeys.googleClientId || "",
     adsenseClientId: process.env.ADSENSE_CLIENT_ID || fileKeys.adsenseClientId || "",
     merchantUpiId: process.env.MERCHANT_UPI_ID || fileKeys.merchantUpiId || "yashlimbasiya1234-2@okaxis",
     merchantName: process.env.MERCHANT_NAME || fileKeys.merchantName || "AetherAI Studio",
@@ -39,7 +39,7 @@ function saveApiKeys(partial) {
     huggingfaceToken: typeof partial.huggingfaceToken === "string" ? partial.huggingfaceToken.trim() : curr.huggingfaceToken,
     groqApiKey: typeof partial.groqApiKey === "string" ? partial.groqApiKey.trim() : curr.groqApiKey,
     openaiApiKey: typeof partial.openaiApiKey === "string" ? partial.openaiApiKey.trim() : curr.openaiApiKey,
-    razorpayKeyId: typeof partial.razorpayKeyId === "string" ? partial.razorpayKeyId.trim() : curr.razorpayKeyId,
+    googleClientId: typeof partial.googleClientId === "string" ? partial.googleClientId.trim() : curr.googleClientId,
     adsenseClientId: typeof partial.adsenseClientId === "string" ? partial.adsenseClientId.trim() : curr.adsenseClientId,
     merchantUpiId: typeof partial.merchantUpiId === "string" ? partial.merchantUpiId.trim() : curr.merchantUpiId,
     merchantName: typeof partial.merchantName === "string" ? partial.merchantName.trim() : curr.merchantName,
@@ -233,6 +233,51 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 200, { token, user: sanitizeUser(user) });
       }
 
+      if (cleanUrl === "/api/auth/google" && req.method === "POST") {
+        const { credential } = await readJsonBody(req);
+        if (!credential) {
+          return sendJson(res, 400, { error: "Missing Google credential token." });
+        }
+        const serverKeys = loadApiKeys();
+        const verifyRes = await fetch(
+          `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(String(credential))}`,
+          { signal: AbortSignal.timeout(10000) }
+        );
+        const info = await verifyRes.json();
+        if (!verifyRes.ok || info.email_verified !== "true" || !info.email) {
+          return sendJson(res, 401, { error: "Invalid Google Sign-In token." });
+        }
+        if (serverKeys.googleClientId && info.aud !== serverKeys.googleClientId) {
+          return sendJson(res, 401, { error: "Google Client ID mismatch." });
+        }
+
+        const cleanEmail = String(info.email).trim().toLowerCase();
+        let user = db.users.find((u) => u.email === cleanEmail);
+        if (!user) {
+          user = {
+            id: crypto.randomUUID(),
+            name: String(info.name || cleanEmail.split("@")[0]).trim(),
+            email: cleanEmail,
+            passwordHash: hashPassword(crypto.randomBytes(24).toString("hex")),
+            authProvider: "google",
+            plan: "free",
+            dailyCredits: DAILY_FREE_CREDITS,
+            lastResetDate: todayKey(),
+            createdAt: new Date().toISOString(),
+          };
+          db.users.push(user);
+          saveDB(db);
+        } else if (refreshDailyCreditsIfNeeded(user)) {
+          saveDB(db);
+        }
+
+        const token = signToken(
+          { userId: user.id, exp: Date.now() + 7 * 24 * 60 * 60 * 1000 },
+          db.tokenSecret
+        );
+        return sendJson(res, 200, { token, user: sanitizeUser(user) });
+      }
+
       if (cleanUrl === "/api/auth/me" && req.method === "GET") {
         const user = getAuthUser(req, db);
         if (!user) return sendJson(res, 401, { error: "Not authenticated" });
@@ -315,8 +360,8 @@ const server = http.createServer(async (req, res) => {
         user.lastPayment = {
           planName: planName || "Pro Creator",
           amount: Number(amount || 199),
-          paymentMethod: paymentMethod || "razorpay",
-          paymentId: paymentId || `demo_${crypto.randomBytes(6).toString("hex")}`,
+          paymentMethod: paymentMethod || "upi",
+          paymentId: paymentId || `upi_${crypto.randomBytes(6).toString("hex")}`,
         };
         saveDB(db);
         return sendJson(res, 200, { ok: true, user: sanitizeUser(user) });
@@ -325,7 +370,7 @@ const server = http.createServer(async (req, res) => {
       if (cleanUrl === "/api/config/public" && req.method === "GET") {
         const keys = loadApiKeys();
         return sendJson(res, 200, {
-          razorpayKeyId: keys.razorpayKeyId,
+          googleClientId: keys.googleClientId,
           adsenseClientId: keys.adsenseClientId,
           paymentConfig: {
             upiId: keys.merchantUpiId,
@@ -337,7 +382,7 @@ const server = http.createServer(async (req, res) => {
             huggingface: Boolean(keys.huggingfaceToken),
             groq: Boolean(keys.groqApiKey),
             openai: Boolean(keys.openaiApiKey),
-            razorpay: Boolean(keys.razorpayKeyId),
+            googleLogin: Boolean(keys.googleClientId),
             adsense: Boolean(keys.adsenseClientId),
           },
         });
@@ -358,7 +403,7 @@ const server = http.createServer(async (req, res) => {
             huggingface: Boolean(saved.huggingfaceToken),
             groq: Boolean(saved.groqApiKey),
             openai: Boolean(saved.openaiApiKey),
-            razorpay: Boolean(saved.razorpayKeyId),
+            googleLogin: Boolean(saved.googleClientId),
             adsense: Boolean(saved.adsenseClientId),
           },
         });

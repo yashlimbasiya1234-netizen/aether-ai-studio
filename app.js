@@ -881,10 +881,10 @@ LIMIT 10;`,
   });
 
   /* ---------------------------------------------------
-     14. Account Auth, Credits, Razorpay Upgrade & Config
+     14. Account Auth, Google Sign-In, Credits & Direct UPI
   --------------------------------------------------- */
-  let RAZORPAY_KEY_ID = "rzp_test_REPLACE_WITH_YOUR_KEY";
-  let serverConfigured = { gemini: false, huggingface: false, groq: false, openai: false, razorpay: false, adsense: false };
+  let GOOGLE_CLIENT_ID = "";
+  let serverConfigured = { gemini: false, huggingface: false, groq: false, openai: false, googleLogin: false, adsense: false };
   let paymentConfig = { upiId: "yashlimbasiya1234-2@okaxis", merchantName: "AetherAI Studio", bankInfo: "" };
 
   function refreshUpiCheckoutBox() {
@@ -927,14 +927,78 @@ LIMIT 10;`,
     document.head.appendChild(s);
   }
 
+  function initGoogleSignIn(clientId) {
+    if (!clientId) return;
+    const renderBtn = () => {
+      if (!window.google?.accounts?.id) return;
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: async (response) => {
+          if (!response?.credential) return;
+          try {
+            const res = await fetch("/api/auth/google", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ credential: response.credential }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+              showToast(data.error || "Google Login failed");
+              return;
+            }
+            authToken = data.token;
+            currentUser = data.user;
+            localStorage.setItem("aether_auth_token", authToken);
+            updateAccountUI();
+            closeAuthModal();
+            showToast(`Welcome, ${currentUser.name}!`);
+            if (pendingUpgradePlan) {
+              const plan = pendingUpgradePlan;
+              pendingUpgradePlan = null;
+              openUpgradeModal(plan.name, plan.amount, plan.cycle);
+            }
+          } catch {
+            showToast("Google Login failed — check server.");
+          }
+        },
+      });
+      const container = $("#googleBtnContainer");
+      const fallback = $("#googleFallbackBtn");
+      if (container) {
+        container.innerHTML = "";
+        window.google.accounts.id.renderButton(container, {
+          theme: "outline",
+          size: "large",
+          width: 340,
+          text: "continue_with",
+        });
+        if (fallback) fallback.style.display = "none";
+      }
+    };
+
+    if (window.google?.accounts?.id) {
+      renderBtn();
+      return;
+    }
+    const existing = document.getElementById("google-gsi-js");
+    if (!existing) {
+      const s = document.createElement("script");
+      s.id = "google-gsi-js";
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true;
+      s.onload = renderBtn;
+      document.head.appendChild(s);
+    }
+  }
+
   async function loadPublicConfig() {
     try {
       const res = await fetch("/api/config/public");
       if (!res.ok) return;
       const data = await res.json();
-      if (data.razorpayKeyId) {
-        RAZORPAY_KEY_ID = data.razorpayKeyId;
-        injectExternalScriptOnce("rzp-checkout-js", "https://checkout.razorpay.com/v1/checkout.js");
+      if (data.googleClientId) {
+        GOOGLE_CLIENT_ID = data.googleClientId;
+        initGoogleSignIn(GOOGLE_CLIENT_ID);
       }
       if (data.adsenseClientId && data.adsenseClientId.startsWith("ca-pub-")) {
         injectExternalScriptOnce(
@@ -961,7 +1025,6 @@ LIMIT 10;`,
   const modalPlanTitle = $("#modalPlanTitle");
   const modalPlanAmount = $("#modalPlanAmount");
   const modalPlanCycle = $("#modalPlanCycle");
-  const razorpayForm = $("#razorpayForm");
 
   const authModal = $("#authModal");
   const authForm = $("#authForm");
@@ -1059,11 +1122,23 @@ LIMIT 10;`,
   const authTabsWrap = $(".auth-tabs");
   let pendingResetEmail = "";
 
+  const googleSignInWrap = $("#googleSignInWrap");
+
+  $("#googleFallbackBtn")?.addEventListener("click", () => {
+    if (GOOGLE_CLIENT_ID) {
+      initGoogleSignIn(GOOGLE_CLIENT_ID);
+      window.google?.accounts?.id?.prompt();
+      return;
+    }
+    showToast("Add GOOGLE_CLIENT_ID in Render Environment to enable 1-click Google Sign-In!");
+  });
+
   function setAuthMode(mode) {
     authMode = mode;
     if (authForm) authForm.style.display = "block";
     if (forgotView) forgotView.style.display = "none";
     if (authTabsWrap) authTabsWrap.style.display = "grid";
+    if (googleSignInWrap) googleSignInWrap.style.display = "block";
     $$(".auth-tab").forEach((t) => t.classList.toggle("active", t.dataset.authMode === mode));
     const isReg = mode === "register";
     if (authNameWrap) authNameWrap.style.display = isReg ? "block" : "none";
@@ -1076,6 +1151,7 @@ LIMIT 10;`,
   function showForgotView() {
     if (authForm) authForm.style.display = "none";
     if (authTabsWrap) authTabsWrap.style.display = "none";
+    if (googleSignInWrap) googleSignInWrap.style.display = "none";
     if (forgotView) forgotView.style.display = "block";
     if (forgotRequestForm) forgotRequestForm.style.display = "block";
     if (forgotResetForm) forgotResetForm.style.display = "none";
@@ -1263,10 +1339,6 @@ LIMIT 10;`,
     if (modalPlanAmount) modalPlanAmount.textContent = `₹${amount}`;
     if (modalPlanCycle) modalPlanCycle.textContent = cycle;
 
-    const checkoutName = $("#checkoutName");
-    const checkoutEmail = $("#checkoutEmail");
-    if (checkoutName) checkoutName.value = currentUser.name;
-    if (checkoutEmail) checkoutEmail.value = currentUser.email;
     refreshUpiCheckoutBox();
 
     upgradeModal?.classList.add("open");
@@ -1299,7 +1371,7 @@ LIMIT 10;`,
     }
   });
 
-  async function finalizeServerUpgrade(paymentId = "", paymentMethod = "razorpay") {
+  async function finalizeServerUpgrade(paymentId = "", paymentMethod = "upi") {
     try {
       const res = await fetch("/api/billing/upgrade", {
         method: "POST",
@@ -1328,15 +1400,6 @@ LIMIT 10;`,
     }
   }
 
-  $$("[data-pay-tab]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.payTab;
-      $$("[data-pay-tab]").forEach((b) => b.classList.toggle("active", b === btn));
-      if ($("#payPanelUpi")) $("#payPanelUpi").style.display = tab === "upi" ? "block" : "none";
-      if (razorpayForm) razorpayForm.style.display = tab === "razorpay" ? "block" : "none";
-    });
-  });
-
   $("#copyUpiBtn")?.addEventListener("click", async () => {
     if (!paymentConfig.upiId) return;
     try {
@@ -1355,30 +1418,6 @@ LIMIT 10;`,
       return;
     }
     finalizeServerUpgrade(`UTR:${utr}`, "upi");
-  });
-
-  razorpayForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = ($("#checkoutName")?.value || "").trim();
-    const email = ($("#checkoutEmail")?.value || "").trim();
-
-    if (typeof window.Razorpay === "function" && !RAZORPAY_KEY_ID.includes("REPLACE")) {
-      const rzp = new window.Razorpay({
-        key: RAZORPAY_KEY_ID,
-        amount: selectedPlan.amount * 100,
-        currency: "INR",
-        name: "AetherAI Studio",
-        description: `${selectedPlan.name} (${selectedPlan.cycle})`,
-        prefill: { name, email },
-        handler: (response) => {
-          finalizeServerUpgrade(response?.razorpay_payment_id || "", "razorpay");
-        },
-      });
-      rzp.open();
-      return;
-    }
-
-    finalizeServerUpgrade("", "demo");
   });
 
   syncAuthState();
