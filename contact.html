@@ -50,29 +50,50 @@
       <div class="container">
         <article class="legal-card">
           <form id="contactForm">
-            <label class="field-label" for="cName">Your Name</label>
-            <input id="cName" type="text" class="studio-input" placeholder="e.g., Rohan Mehta" required />
+            <div class="control-row" style="margin-top: 0;">
+              <div class="control-group">
+                <label class="field-label" for="cName">Your Name</label>
+                <input id="cName" type="text" class="studio-input" placeholder="e.g., Rohan Mehta" required />
+              </div>
+              <div class="control-group">
+                <label class="field-label" for="cPhone">WhatsApp / Phone Number</label>
+                <input id="cPhone" type="tel" class="studio-input" placeholder="e.g., +91 98765 43210" />
+              </div>
+            </div>
 
             <label class="field-label" for="cEmail" style="margin-top: 14px;">Email Address</label>
             <input id="cEmail" type="email" class="studio-input" placeholder="you@example.com" required />
 
-            <label class="field-label" for="cTopic" style="margin-top: 14px;">Topic</label>
-            <select id="cTopic" class="studio-select">
-              <option value="support">General Support</option>
-              <option value="sponsor">Sponsored AI Tool Listing</option>
-              <option value="custom">Hire Us for Custom AI Website</option>
-              <option value="privacy">Privacy / Billing Inquiry</option>
-            </select>
+            <div class="control-row" style="margin-top: 14px;">
+              <div class="control-group">
+                <label class="field-label" for="cTopic">Inquiry Type</label>
+                <select id="cTopic" class="studio-select">
+                  <option value="custom">Hire Us for Custom AI Website</option>
+                  <option value="sponsor">Sponsored AI Tool Listing</option>
+                  <option value="support">General Support</option>
+                  <option value="privacy">Privacy / Billing Inquiry</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label class="field-label" for="cBudget">Estimated Project Budget</label>
+                <select id="cBudget" class="studio-select">
+                  <option value="15k-30k">₹15,000 – ₹30,000</option>
+                  <option value="30k-50k">₹30,000 – ₹50,000</option>
+                  <option value="50k+">₹50,000+ (Full SaaS / Agency)</option>
+                  <option value="other">Support / Other</option>
+                </select>
+              </div>
+            </div>
 
-            <label class="field-label" for="cMessage" style="margin-top: 14px;">Message</label>
-            <textarea id="cMessage" class="studio-textarea" rows="5" placeholder="Tell us how we can help..." required></textarea>
+            <label class="field-label" for="cMessage" style="margin-top: 14px;">Project Details / Message</label>
+            <textarea id="cMessage" class="studio-textarea" rows="5" placeholder="Tell us about the website, AI features, or timeline you want..." required></textarea>
 
             <button type="submit" class="btn btn-primary btn-full" style="margin-top: 18px;">
-              <span>Send Message →</span>
+              <span>Send Inquiry →</span>
             </button>
           </form>
 
-          <p style="margin-top: 8px; font-size: 0.88rem;">Direct Business Email: <code>hello@aetherai-studio.example</code> (replace with your own domain email before submitting to AdSense).</p>
+          <p style="margin-top: 8px; font-size: 0.88rem;">Business, Sponsorships &amp; Custom AI Websites: Submit the inquiry form above for a response within 24 hours.</p>
         </article>
       </div>
     </section>

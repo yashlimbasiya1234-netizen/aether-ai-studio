@@ -8,7 +8,26 @@ const HOST = process.env.PORT ? "0.0.0.0" : "127.0.0.1";
 const ROOT = __dirname;
 const DB_PATH = path.join(ROOT, "users_db.json");
 const KEYS_PATH = path.join(ROOT, "api_keys.json");
+const LEADS_PATH = path.join(ROOT, "leads_db.json");
 const DAILY_FREE_CREDITS = 5;
+
+function loadLeads() {
+  try {
+    if (fs.existsSync(LEADS_PATH)) {
+      const parsed = JSON.parse(fs.readFileSync(LEADS_PATH, "utf8"));
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {
+    // ignore
+  }
+  return [];
+}
+
+function saveLead(entry) {
+  const leads = loadLeads();
+  leads.unshift(entry);
+  fs.writeFileSync(LEADS_PATH, JSON.stringify(leads.slice(0, 500), null, 2));
+}
 
 function loadApiKeys() {
   let fileKeys = {};
@@ -365,6 +384,41 @@ const server = http.createServer(async (req, res) => {
         };
         saveDB(db);
         return sendJson(res, 200, { ok: true, user: sanitizeUser(user) });
+      }
+
+      if (cleanUrl === "/api/contact" && req.method === "POST") {
+        const { name, email, phone, topic, budget, message } = await readJsonBody(req);
+        const cleanName = String(name || "").trim();
+        const cleanEmail = String(email || "").trim();
+        const cleanMsg = String(message || "").trim();
+        if (!cleanName || !cleanEmail.includes("@") || !cleanMsg) {
+          return sendJson(res, 400, { error: "Name, valid email, and message are required." });
+        }
+        const lead = {
+          id: crypto.randomUUID(),
+          name: cleanName,
+          email: cleanEmail,
+          phone: String(phone || "").trim(),
+          topic: String(topic || "custom").trim(),
+          budget: String(budget || "").trim(),
+          message: cleanMsg,
+          createdAt: new Date().toISOString(),
+        };
+        saveLead(lead);
+        console.log(`[NEW LEAD] ${lead.topic} | ${lead.budget || "N/A"} | ${lead.name} (${lead.email} / ${lead.phone})`);
+        return sendJson(res, 201, { ok: true, id: lead.id });
+      }
+
+      if (cleanUrl === "/api/leads" && req.method === "GET") {
+        const remote = req.socket?.remoteAddress || "";
+        const isLocal = remote === "127.0.0.1" || remote === "::1" || remote === "::ffff:127.0.0.1";
+        const urlObj = new URL(req.url, "http://localhost");
+        const adminKey = process.env.ADMIN_LEADS_KEY || "";
+        const supplied = urlObj.searchParams.get("key") || "";
+        if (!isLocal && (!adminKey || supplied !== adminKey)) {
+          return sendJson(res, 403, { error: "Unauthorized — set ADMIN_LEADS_KEY in Render Environment." });
+        }
+        return sendJson(res, 200, { leads: loadLeads() });
       }
 
       if (cleanUrl === "/api/config/public" && req.method === "GET") {

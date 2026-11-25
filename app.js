@@ -1435,11 +1435,36 @@ LIMIT 10;`,
   });
 
   /* Contact Page Form Handler */
-  $("#contactForm")?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    e.target.reset();
-    showToast("Message received! We will reply within 24 hours.");
-  });
+  const contactForm = $("#contactForm");
+  if (contactForm) {
+    const params = new URLSearchParams(window.location.search);
+    const topicParam = params.get("topic");
+    if (topicParam && $("#cTopic")) $("#cTopic").value = topicParam;
+
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: ($("#cName")?.value || "").trim(),
+        phone: ($("#cPhone")?.value || "").trim(),
+        email: ($("#cEmail")?.value || "").trim(),
+        topic: $("#cTopic")?.value || "custom",
+        budget: $("#cBudget")?.value || "",
+        message: ($("#cMessage")?.value || "").trim(),
+      };
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("Save failed");
+        e.target.reset();
+        showToast("Inquiry saved! We will contact you within 24 hours.");
+      } catch {
+        showToast("Could not submit right now — please try again.");
+      }
+    });
+  }
 
   /* ---------------------------------------------------
      15. Tool 0: Normal AI Chat Assistant (Cloud + Gemini + Offline)
