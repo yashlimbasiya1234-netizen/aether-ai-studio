@@ -1,0 +1,12 @@
+{
+  "name": "aether-ai-studio",
+  "version": "1.0.0",
+  "description": "Free Animated AI Studio & Utility Hub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

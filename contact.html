@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="violet">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — AetherAI Studio</title>
+  <meta name="description" content="Contact AetherAI Studio for support, sponsorships, custom AI website builds, or privacy inquiries." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-name">Aether<span class="gradient-text">AI</span></span>
+        <span class="badge-free">100% FREE</span>
+      </a>
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="index.html#tools">AI Tools</a>
+        <a href="index.html#playground">Live Studio</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="index.html#playground" class="btn btn-primary btn-sm">Launch Studio →</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="legal-hero">
+      <div class="container">
+        <span class="eyebrow">GET IN TOUCH</span>
+        <h1>Contact <span class="gradient-text">AetherAI</span></h1>
+        <p>Questions, sponsored AI tool listings, custom website inquiries, or support — drop us a message below.</p>
+      </div>
+    </section>
+
+    <section class="legal-section">
+      <div class="container">
+        <article class="legal-card">
+          <form id="contactForm">
+            <label class="field-label" for="cName">Your Name</label>
+            <input id="cName" type="text" class="studio-input" placeholder="e.g., Rohan Mehta" required />
+
+            <label class="field-label" for="cEmail" style="margin-top: 14px;">Email Address</label>
+            <input id="cEmail" type="email" class="studio-input" placeholder="you@example.com" required />
+
+            <label class="field-label" for="cTopic" style="margin-top: 14px;">Topic</label>
+            <select id="cTopic" class="studio-select">
+              <option value="support">General Support</option>
+              <option value="sponsor">Sponsored AI Tool Listing</option>
+              <option value="custom">Hire Us for Custom AI Website</option>
+              <option value="privacy">Privacy / Billing Inquiry</option>
+            </select>
+
+            <label class="field-label" for="cMessage" style="margin-top: 14px;">Message</label>
+            <textarea id="cMessage" class="studio-textarea" rows="5" placeholder="Tell us how we can help..." required></textarea>
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top: 18px;">
+              <span>Send Message →</span>
+            </button>
+          </form>
+
+          <p style="margin-top: 8px; font-size: 0.88rem;">Direct Business Email: <code>hello@aetherai-studio.example</code> (replace with your own domain email before submitting to AdSense).</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="brand"><span class="brand-name">Aether<span class="gradient-text">AI</span></span></div>
+        <p class="footer-note">© 2026 AetherAI Studio. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">Message sent!</div>
+  <script src="app.js"></script>
+</body>
+</html>

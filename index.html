@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="violet">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherAI — Free Animated AI Studio & Playground</title>
+  <meta name="description" content="100% Free AI Tool Studio with interactive AI Writer, Code Architect, Generative Art Canvas, Summarizer, and Voice Synth — zero sign-up required." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Ambient Cursor Spotlight -->
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!-- Background Neural Particle Canvas -->
+  <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+
+  <!-- Animated Gradient Orbs -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="brand">
+        <span class="brand-logo">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="32" height="32" rx="10" stroke="url(#logoGrad)" stroke-width="2.2"/>
+            <path d="M18 8L26 24H21.8L20 20H16L14.2 24H10L18 8ZM18 13.5L16.7 17H19.3L18 13.5Z" fill="url(#logoGrad)"/>
+            <circle cx="27" cy="9" r="2.2" fill="#22d3ee"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#a855f7"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="brand-name">Aether<span class="gradient-text">AI</span></span>
+        <span class="badge-free">100% FREE</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#tools">AI Tools</a>
+        <a href="#playground">Live Studio</a>
+        <a href="#affiliates">Pro Partners</a>
+        <a href="#pricing">Pricing</a>
+        <a href="about.html">About</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="theme-switcher" title="Switch Neon Theme">
+          <button class="theme-dot active" data-set-theme="violet" aria-label="Violet Theme"></button>
+          <button class="theme-dot" data-set-theme="emerald" aria-label="Emerald Theme"></button>
+          <button class="theme-dot" data-set-theme="solar" aria-label="Solar Theme"></button>
+        </div>
+        <button class="cmd-trigger" id="cmdTrigger" title="Quick Launcher (Ctrl+K)">
+          <span>Quick AI</span>
+          <kbd>Ctrl K</kbd>
+        </button>
+        <button type="button" class="btn btn-glass btn-sm" id="navLoginBtn">
+          <span>🔑 Login</span>
+        </button>
+        <div class="user-pill" id="userPill" style="display: none;">
+          <span class="user-pill-name" id="userPillName">User</span>
+          <span class="user-plan-badge" id="userPlanBadge">FREE</span>
+          <button type="button" class="user-logout-btn" id="logoutBtn" title="Logout">✕</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm magnetic" id="navUpgradeBtn">
+          <span>⚡ Upgrade Pro</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="#tools" class="mobile-link">AI Tools</a>
+    <a href="#playground" class="mobile-link">Live Studio</a>
+    <a href="#affiliates" class="mobile-link">Pro Partners</a>
+    <a href="#pricing" class="mobile-link">Pricing</a>
+    <a href="about.html" class="mobile-link">About</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
+    <button type="button" class="btn btn-glass mobile-link" id="mobileLoginBtn">🔑 Login / Sign Up</button>
+    <a href="#playground" class="btn btn-primary mobile-link">Try Free Studio →</a>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content reveal">
+          <div class="pill-tag">
+            <span class="pulse-dot"></span>
+            <span>No Login • No Credit Card • Unlimited Free AI</span>
+          </div>
+
+          <h1 class="hero-title">
+            Create Faster With <br />
+            <span class="gradient-text-animated">Next-Gen Free AI</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Write viral scripts, architect clean code, craft pro image prompts, summarize articles, and synthesize AI voices — all inside one ultra-fast animated studio.
+          </p>
+
+          <div class="hero-cta">
+            <a href="#playground" class="btn btn-primary btn-lg magnetic">
+              <span>Start Creating Free</span>
+              <span class="shimmer"></span>
+            </a>
+            <a href="#tools" class="btn btn-glass btn-lg">
+              <span>Explore 9 AI Tools</span>
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <strong class="counter" data-target="100" data-suffix="%">0%</strong>
+              <span>Free Forever</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <strong class="counter" data-target="9" data-suffix="+">0+</strong>
+              <span>Live AI Tools</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <strong class="counter" data-target="0" data-suffix="ms">0ms</strong>
+              <span>Sign-up Friction</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Animated Interactive Hero Preview Card -->
+        <div class="hero-visual reveal delay-1">
+          <div class="ai-terminal-card tilt-card">
+            <div class="card-glow-border"></div>
+            <div class="terminal-header">
+              <div class="window-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="terminal-title">aether-neural-engine.v4</div>
+              <div class="terminal-status">
+                <span class="status-dot"></span>
+                <span id="heroEngineMode">ACTIVE</span>
+              </div>
+            </div>
+
+            <div class="terminal-body">
+              <div class="prompt-row">
+                <span class="prompt-label">PROMPT</span>
+                <div class="prompt-typing" id="heroPromptText"></div>
+              </div>
+
+              <div class="neural-wave-box">
+                <div class="wave-bars" id="heroWaveBars">
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <span class="wave-label" id="heroStatusLabel">Synthesizing neural response...</span>
+              </div>
+
+              <div class="output-preview" id="heroOutputText"></div>
+
+              <div class="terminal-footer">
+                <div class="chip-row">
+                  <span class="mini-chip">⚡ Instant</span>
+                  <span class="mini-chip">🔒 Private</span>
+                  <span class="mini-chip">✨ Free</span>
+                </div>
+                <a href="#playground" class="mini-link">Try Live →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Down Indicator -->
+      <a href="#marquee" class="scroll-indicator" aria-label="Scroll down">
+        <span class="mouse"><span class="wheel"></span></span>
+      </a>
+    </section>
+
+    <!-- INFINITE MARQUEE -->
+    <section class="marquee-section" id="marquee">
+      <div class="marquee-track">
+        <div class="marquee-content">
+          <span>✦ AI Content & Script Writer</span>
+          <span>✦ Generative Canvas Art</span>
+          <span>✦ Code & Regex Architect</span>
+          <span>✦ Smart Text Summarizer</span>
+          <span>✦ Web Speech Voice Synth</span>
+          <span>✦ Midjourney Prompt Enhancer</span>
+          <span>✦ Zero Sign-up Required</span>
+          <span>✦ Instant Browser Execution</span>
+        </div>
+        <div class="marquee-content" aria-hidden="true">
+          <span>✦ AI Content & Script Writer</span>
+          <span>✦ Generative Canvas Art</span>
+          <span>✦ Code & Regex Architect</span>
+          <span>✦ Smart Text Summarizer</span>
+          <span>✦ Web Speech Voice Synth</span>
+          <span>✦ Midjourney Prompt Enhancer</span>
+          <span>✦ Zero Sign-up Required</span>
+          <span>✦ Instant Browser Execution</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENTO GRID AI TOOLS -->
+    <section class="section" id="tools">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">AI SUITE</span>
+          <h2>Everything You Need, <span class="gradient-text">Zero Paywalls</span></h2>
+          <p>Click any tool below to jump straight into its live interactive workspace.</p>
+        </div>
+
+        <div class="bento-grid">
+          <article class="bento-card tilt-card reveal" data-jump-tab="writer">
+            <div class="card-icon icon-purple">✍️</div>
+            <div class="card-badge">Popular</div>
+            <h3>AI Content & Script Writer</h3>
+            <p>Generate YouTube hooks, Instagram reels captions, blog intros, and professional emails with tone control.</p>
+            <span class="card-cta">Open Writer →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal delay-1" data-jump-tab="code">
+            <div class="card-icon icon-cyan">⚡</div>
+            <div class="card-badge">Developer</div>
+            <h3>Code & Regex Architect</h3>
+            <p>Turn plain-English requirements into ready-to-paste HTML/JS components, Python scripts, SQL, or Regex.</p>
+            <span class="card-cta">Open Coder →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal delay-2" data-jump-tab="image">
+            <div class="card-icon icon-pink">🎨</div>
+            <div class="card-badge">Creative</div>
+            <h3>AI Prompt & Generative Art</h3>
+            <p>Expand simple ideas into cinematic Midjourney/Flux prompts AND render downloadable procedural artwork live.</p>
+            <span class="card-cta">Open Art Studio →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal" data-jump-tab="summary">
+            <div class="card-icon icon-emerald">🧠</div>
+            <div class="card-badge">Productivity</div>
+            <h3>Smart Summarizer & Analyzer</h3>
+            <p>Extract key takeaways, bullet summaries, sentiment, and reading metrics from any pasted article or note.</p>
+            <span class="card-cta">Open Summarizer →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal delay-1" data-jump-tab="voice">
+            <div class="card-icon icon-amber">🎙️</div>
+            <div class="card-badge">Audio</div>
+            <h3>AI Voice & Equalizer Studio</h3>
+            <p>Convert any text into natural spoken audio right in your browser with animated visualizer bars & pitch controls.</p>
+            <span class="card-cta">Open Voice Lab →</span>
+          </article>
+
+          <article class="bento-card bento-highlight tilt-card reveal delay-2" data-jump-tab="chat">
+            <div class="card-icon icon-indigo">💬</div>
+            <div class="card-badge">New • Live Talk</div>
+            <h3>Normal AI Chat Assistant</h3>
+            <p>Have natural conversations in English, Gujarati, or Hinglish — ask questions, brainstorm ideas, or chat with voice mic.</p>
+            <span class="card-cta">Start Chatting →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal" data-jump-tab="pdf">
+            <div class="card-icon icon-purple">📄</div>
+            <div class="card-badge">Utility</div>
+            <h3>Instant PDF Maker</h3>
+            <p>Turn notes, resumes, invoices, or AI scripts into clean downloadable PDF documents with live paper preview.</p>
+            <span class="card-cta">Make PDF →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal delay-1" data-jump-tab="calc">
+            <div class="card-icon icon-cyan">🧮</div>
+            <div class="card-badge">3-in-1</div>
+            <h3>Smart Calculator Hub</h3>
+            <p>Scientific keypad, Home/Car Loan EMI calculator, and GST + Discount calculator in one animated studio.</p>
+            <span class="card-cta">Open Calculator →</span>
+          </article>
+
+          <article class="bento-card tilt-card reveal delay-2" data-jump-tab="imgtool">
+            <div class="card-icon icon-pink">📐</div>
+            <div class="card-badge">New • Utility</div>
+            <h3>Image Resizer &amp; Converter</h3>
+            <p>Resize images smaller or larger (px / KB), lock aspect ratio, and convert PNG, JPG, and WEBP locally.</p>
+            <span class="card-cta">Resize &amp; Convert →</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE INTERACTIVE AI PLAYGROUND -->
+    <section class="section playground-section" id="playground">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">LIVE PLAYGROUND</span>
+          <h2>Try The <span class="gradient-text">Free AI Studio</span> Now</h2>
+          <p>Chat normally, generate real AI images, write scripts, architect code, summarize text, or synthesize voices.</p>
+        </div>
+
+        <div class="studio-shell reveal">
+          <!-- Account & Credits Status Bar -->
+          <div class="studio-account-bar" id="studioAccountBar">
+            <div class="account-bar-left">
+              <span class="pulse-dot"></span>
+              <span id="accountStatusText">Guest Trial (2 free tries) — Login for 5 daily free credits</span>
+            </div>
+            <div class="account-bar-right">
+              <span class="credit-badge" id="creditBadge">2 / 2 Trial</span>
+              <button type="button" class="copy-btn" id="barLoginBtn">Login / Sign Up</button>
+              <button type="button" class="btn btn-primary btn-sm upgrade-trigger" data-plan="Pro Creator" data-amount="199" data-cycle="Monthly" id="barUpgradeBtn">⚡ Go Pro</button>
+            </div>
+          </div>
+
+          <!-- Studio Tabs -->
+          <div class="studio-tabs" role="tablist">
+            <button class="studio-tab active" data-tab="chat" role="tab">
+              <span>💬</span> AI Chat
+            </button>
+            <button class="studio-tab" data-tab="image" role="tab">
+              <span>🎨</span> AI Image Gen
+            </button>
+            <button class="studio-tab" data-tab="writer" role="tab">
+              <span>✍️</span> AI Writer
+            </button>
+            <button class="studio-tab" data-tab="code" role="tab">
+              <span>⚡</span> Code Architect
+            </button>
+            <button class="studio-tab" data-tab="summary" role="tab">
+              <span>🧠</span> Summarizer
+            </button>
+            <button class="studio-tab" data-tab="voice" role="tab">
+              <span>🎙️</span> AI Voice Synth
+            </button>
+            <button class="studio-tab" data-tab="pdf" role="tab">
+              <span>📄</span> PDF Maker
+            </button>
+            <button class="studio-tab" data-tab="calc" role="tab">
+              <span>🧮</span> Calculator
+            </button>
+            <button class="studio-tab" data-tab="imgtool" role="tab">
+              <span>📐</span> Resize &amp; Convert
+            </button>
+          </div>
+
+          <!-- PANEL 0: NORMAL AI CHAT -->
+          <div class="studio-panel active" id="panel-chat">
+            <div class="chat-shell">
+              <div class="chat-topbar">
+                <div class="chat-engine-group">
+                  <label class="field-label" for="chatEngineSelect" style="margin: 0;">AI Engine:</label>
+                  <select id="chatEngineSelect" class="studio-select chat-select-sm">
+                    <option value="cloud">Free Cloud AI (No Key Needed)</option>
+                    <option value="gemini">Google Gemini 2.5 Flash</option>
+                    <option value="groq">Groq Llama 3.3 (Ultra Fast)</option>
+                    <option value="openai">OpenAI ChatGPT (GPT-4o-mini)</option>
+                    <option value="local">Instant Offline Assistant</option>
+                  </select>
+                </div>
+                <div class="chat-top-actions">
+                  <button type="button" class="copy-btn" id="toggleGeminiKeyBtn">⚙️ API Key</button>
+                  <button type="button" class="copy-btn" id="clearChatBtn">🗑️ Clear</button>
+                </div>
+              </div>
+
+              <div class="gemini-key-drawer" id="geminiKeyDrawer" style="display: none;">
+                <input id="geminiApiKeyInput" type="password" class="studio-input" placeholder="Paste your free Google Gemini API key (AIza...) — saved only in your browser" />
+                <button type="button" class="btn btn-primary btn-sm" id="saveGeminiKeyBtn">Save Key</button>
+              </div>
+
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg ai">
+                  <div class="chat-avatar">✨</div>
+                  <div class="chat-bubble">
+                    <div class="chat-sender">AetherAI Assistant</div>
+                    <p>Kem cho! 👋 Hu tamaro free AI assistant chu. Tame mari sathe normal vat kari shako cho — English, Gujarati, ke Hinglish ma kai pan pucho (ideas, coding, captions, study, ke daily chat)!</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick-presets" style="margin: 10px 0 12px;">
+                <span>Try:</span>
+                <button type="button" class="preset-chip" data-chat-preset="Kem cho! Mane YouTube Shorts mate 3 viral AI topic ideas aap.">Gujarati Ideas</button>
+                <button type="button" class="preset-chip" data-chat-preset="Explain artificial intelligence like I am 12 years old.">Explain AI Simply</button>
+                <button type="button" class="preset-chip" data-chat-preset="Write a short motivating quote for students.">Motivating Quote</button>
+                <button type="button" class="preset-chip" data-chat-preset="Give me a quick Python hello world and loop example.">Python Help</button>
+              </div>
+
+              <form id="chatForm" class="chat-input-row">
+                <input id="chatInput" type="text" class="studio-input" placeholder="Type your message... (e.g. Kem cho? / Write a poem / Help with code)" autocomplete="off" required />
+                <button type="button" class="btn btn-glass" id="chatMicBtn" title="Speak with Voice">🎙️</button>
+                <button type="submit" class="btn btn-primary" id="chatSendBtn">
+                  <span>Send →</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- PANEL 1: AI WRITER -->
+          <div class="studio-panel" id="panel-writer">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <label class="field-label" for="writerTopic">What do you want to write about?</label>
+                <textarea id="writerTopic" class="studio-textarea" rows="4" placeholder="e.g., Launch post for a new free AI website, or YouTube intro about space tech..."></textarea>
+
+                <div class="control-row">
+                  <div class="control-group">
+                    <label class="field-label" for="writerFormat">Format</label>
+                    <select id="writerFormat" class="studio-select">
+                      <option value="reel">Instagram Reel / Shorts Hook</option>
+                      <option value="blog">Blog Post Intro & Outline</option>
+                      <option value="email">High-Converting Email</option>
+                      <option value="ad">Viral Ad Copy</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="writerTone">Tone</label>
+                    <select id="writerTone" class="studio-select">
+                      <option value="viral">Viral & Punchy</option>
+                      <option value="pro">Professional</option>
+                      <option value="friendly">Friendly & Casual</option>
+                      <option value="futuristic">Bold & Futuristic</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="quick-presets">
+                  <span>Presets:</span>
+                  <button type="button" class="preset-chip" data-writer-preset="A sleek new free AI tool website with futuristic animations">AI Website Launch</button>
+                  <button type="button" class="preset-chip" data-writer-preset="5 morning habits for developers to boost focus">Developer Habits</button>
+                  <button type="button" class="preset-chip" data-writer-preset="Eco-friendly smart water bottle for travelers">Smart Product</button>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-full" id="runWriterBtn">
+                  <span>✨ Generate Content</span>
+                </button>
+              </div>
+
+              <div class="studio-output-wrap">
+                <div class="output-bar">
+                  <span class="output-title">AI Output Stream</span>
+                  <button type="button" class="copy-btn" data-copy-target="writerOutput">Copy</button>
+                </div>
+                <div class="output-box" id="writerOutput">
+                  <span class="placeholder-text">Enter a topic on the left and click "Generate Content" to watch the AI stream your draft live...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 2: CODE ARCHITECT -->
+          <div class="studio-panel" id="panel-code">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <label class="field-label" for="codeTask">Select what to generate</label>
+                <select id="codeTask" class="studio-select">
+                  <option value="glass-card">Animated Glassmorphism Card (HTML + CSS)</option>
+                  <option value="fetch-retry">API Fetch with Auto-Retry (JavaScript)</option>
+                  <option value="python-scraper">Fast Async Web API Client (Python)</option>
+                  <option value="regex-email">Strict Email & Phone Validator (Regex)</option>
+                  <option value="sql-analytics">Top Users Revenue Query (SQL)</option>
+                </select>
+
+                <label class="field-label" for="codeCustomNote" style="margin-top: 14px;">Custom Component Name / Note (optional)</label>
+                <input id="codeCustomNote" type="text" class="studio-input" placeholder="e.g., NovaWidget or user_orders" />
+
+                <button type="button" class="btn btn-primary btn-full" id="runCodeBtn" style="margin-top: 18px;">
+                  <span>⚡ Architect Code</span>
+                </button>
+              </div>
+
+              <div class="studio-output-wrap">
+                <div class="output-bar">
+                  <span class="output-title">Generated Code</span>
+                  <button type="button" class="copy-btn" data-copy-target="codeOutput">Copy Code</button>
+                </div>
+                <pre class="output-box code-box" id="codeOutput"><code>// Select a blueprint and click "Architect Code"</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 3: REAL AI IMAGE GENERATOR & ART LAB -->
+          <div class="studio-panel" id="panel-image">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <label class="field-label" for="artIdea">Describe the image you want to create (English or Gujarati)</label>
+                <input id="artIdea" type="text" class="studio-input" placeholder="e.g., Realistic golden retriever puppy wearing sunglasses in a sunlit park" value="Realistic futuristic electric supercar parked in rain on glowing neon Tokyo street, 8k DSLR" />
+
+                <div class="control-row" style="margin-top: 12px;">
+                  <div class="control-group">
+                    <label class="field-label" for="artStyle">Art Style</label>
+                    <select id="artStyle" class="studio-select">
+                      <option value="photoreal">Photorealistic 8K</option>
+                      <option value="cyberpunk">Cyberpunk Neon</option>
+                      <option value="pixar">3D Pixar / Stylized</option>
+                      <option value="anime">Anime Masterpiece</option>
+                      <option value="aurora">Cosmic Aurora</option>
+                      <option value="minimal">Minimalist Logo</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="artSize">Aspect Ratio</label>
+                    <select id="artSize" class="studio-select">
+                      <option value="1024x1024">1:1 Square (1024×1024)</option>
+                      <option value="1280x720">16:9 Wide (1280×720)</option>
+                      <option value="720x1280">9:16 Reel (720×1280)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="quick-presets" style="margin: 12px 0;">
+                  <span>Ideas:</span>
+                  <button type="button" class="preset-chip" data-art-preset="Luxury futuristic sports car on wet neon street at night">Neon Car</button>
+                  <button type="button" class="preset-chip" data-art-preset="Cute baby dragon sitting on glowing crystals">Cute Dragon</button>
+                  <button type="button" class="preset-chip" data-art-preset="Modern minimalist tech startup logo with glowing letter A">Tech Logo</button>
+                </div>
+
+                <div class="btn-row" style="margin-top: 14px;">
+                  <button type="button" class="btn btn-primary" id="runArtBtn" style="flex: 1;">
+                    <span>🎨 Generate AI Image</span>
+                  </button>
+                  <button type="button" class="btn btn-glass" id="downloadArtBtn">
+                    <span>⬇ Download</span>
+                  </button>
+                  <button type="button" class="btn btn-glass" id="sendToResizeBtn" title="Resize or Convert Format">
+                    <span>📐 Resize</span>
+                  </button>
+                </div>
+
+                <div class="output-bar" style="margin-top: 14px;">
+                  <span class="output-title">Enhanced AI Prompt</span>
+                  <button type="button" class="copy-btn" data-copy-target="artPromptOutput">Copy</button>
+                </div>
+                <div class="output-box compact-box" id="artPromptOutput">Click "Generate AI Image" to create a real AI image and studio-grade prompt.</div>
+              </div>
+
+              <div class="studio-output-wrap art-canvas-wrap">
+                <div class="output-bar">
+                  <span class="output-title" id="imageStageTitle">AI Image Preview</span>
+                  <span class="mini-badge" id="imageStatusBadge">Ready</span>
+                </div>
+                <div class="image-stage">
+                  <div class="image-loader" id="imageLoader" style="display: none;">
+                    <div class="spinner-ring"></div>
+                    <span>Generating your AI image...</span>
+                  </div>
+                  <img id="aiGeneratedImg" class="ai-img-preview" alt="AI generated preview" style="display: none;" />
+                  <canvas id="artCanvas" width="640" height="400"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 4: SUMMARIZER -->
+          <div class="studio-panel" id="panel-summary">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <label class="field-label" for="summaryInput">Paste any article, essay, or notes</label>
+                <textarea id="summaryInput" class="studio-textarea" rows="7" placeholder="Paste your text here...">Artificial intelligence is rapidly transforming how creators, developers, and small businesses build products. Modern browser-based tools allow instant text drafting, code generation, and visual prototyping without expensive subscriptions or complex cloud setups. By combining clean user interfaces with fluid motion design, free AI hubs empower students and entrepreneurs worldwide to launch ideas in minutes instead of weeks.</textarea>
+
+                <button type="button" class="btn btn-primary btn-full" id="runSummaryBtn" style="margin-top: 14px;">
+                  <span>🧠 Analyze & Summarize</span>
+                </button>
+              </div>
+
+              <div class="studio-output-wrap">
+                <div class="output-bar">
+                  <span class="output-title">Intelligence Report</span>
+                  <button type="button" class="copy-btn" data-copy-target="summaryOutput">Copy</button>
+                </div>
+                <div class="metrics-strip" id="summaryMetrics">
+                  <div class="metric-pill">Words: <strong id="mWords">—</strong></div>
+                  <div class="metric-pill">Read Time: <strong id="mRead">—</strong></div>
+                  <div class="metric-pill">Tone: <strong id="mTone">—</strong></div>
+                </div>
+                <div class="output-box" id="summaryOutput">
+                  <span class="placeholder-text">Click "Analyze & Summarize" to extract key bullets, keywords, and concise takeaways.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 5: VOICE SYNTH -->
+          <div class="studio-panel" id="panel-voice">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <label class="field-label" for="voiceText">Enter text to speak</label>
+                <textarea id="voiceText" class="studio-textarea" rows="4">Welcome to AetherAI, your free animated AI studio. No sign-up, no limits, just pure creativity at light speed.</textarea>
+
+                <div class="control-row" style="margin-top: 14px;">
+                  <div class="control-group">
+                    <label class="field-label" for="voiceSelect">Voice</label>
+                    <select id="voiceSelect" class="studio-select"></select>
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="voiceRate">Speed: <span id="voiceRateVal">1.0x</span></label>
+                    <input id="voiceRate" type="range" min="0.6" max="1.6" step="0.1" value="1.0" class="studio-range" />
+                  </div>
+                </div>
+
+                <div class="btn-row" style="margin-top: 18px;">
+                  <button type="button" class="btn btn-primary" id="speakBtn" style="flex: 1;">
+                    <span>▶ Speak Now</span>
+                  </button>
+                  <button type="button" class="btn btn-glass" id="stopSpeakBtn">
+                    <span>■ Stop</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="studio-output-wrap voice-viz-wrap">
+                <div class="output-bar">
+                  <span class="output-title">Neural Voice Equalizer</span>
+                  <span class="mini-badge" id="voiceStateBadge">Idle</span>
+                </div>
+                <div class="equalizer-stage" id="equalizerStage">
+                  <div class="eq-ring"></div>
+                  <div class="eq-bars" id="eqBars"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 6: INSTANT PDF MAKER -->
+          <div class="studio-panel" id="panel-pdf">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <div class="control-row" style="margin-top: 0;">
+                  <div class="control-group">
+                    <label class="field-label" for="pdfTitle">Document Title</label>
+                    <input id="pdfTitle" type="text" class="studio-input" value="AetherAI Project Brief" />
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="pdfSubtitle">Author / Subtitle</label>
+                    <input id="pdfSubtitle" type="text" class="studio-input" value="Prepared with AetherAI Studio" />
+                  </div>
+                </div>
+
+                <label class="field-label" for="pdfBody" style="margin-top: 12px;">Document Content</label>
+                <textarea id="pdfBody" class="studio-textarea" rows="7" placeholder="Write or paste your content here...">1. Overview
+AetherAI Studio helps creators draft scripts, generate visuals, and organize notes in seconds.
+
+2. Key Highlights
+- 100% Free browser tools with zero friction
+- Fast PDF export for resumes, invoices, and study notes
+- Clean typography ready for sharing or printing
+
+3. Next Steps
+Edit this text or pick a quick template below and click Download Real PDF!</textarea>
+
+                <div class="quick-presets" style="margin: 10px 0 14px;">
+                  <span>Templates:</span>
+                  <button type="button" class="preset-chip" data-pdf-preset="invoice">Invoice / Bill</button>
+                  <button type="button" class="preset-chip" data-pdf-preset="resume">Resume Bio</button>
+                  <button type="button" class="preset-chip" data-pdf-preset="notes">Study Notes</button>
+                </div>
+
+                <div class="btn-row">
+                  <button type="button" class="btn btn-primary" id="downloadRealPdfBtn" style="flex: 1;">
+                    <span>⬇ Download Real PDF</span>
+                  </button>
+                  <button type="button" class="btn btn-glass" id="printPdfBtn">
+                    <span>🖨️ Print / Save Styled</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="studio-output-wrap">
+                <div class="output-bar">
+                  <span class="output-title">Live PDF Page Preview</span>
+                  <span class="mini-badge">A4 Ready</span>
+                </div>
+                <div class="pdf-paper-preview" id="pdfPaperPreview">
+                  <div class="pdf-paper-header">
+                    <h3 id="pdfPreviewTitle">AetherAI Project Brief</h3>
+                    <p id="pdfPreviewSubtitle">Prepared with AetherAI Studio</p>
+                  </div>
+                  <div class="pdf-paper-body" id="pdfPreviewBody"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 7: SMART CALCULATOR HUB -->
+          <div class="studio-panel" id="panel-calc">
+            <div class="calc-mode-pills">
+              <button type="button" class="calc-mode-btn active" data-calc-mode="standard">🔢 Standard &amp; Sci</button>
+              <button type="button" class="calc-mode-btn" data-calc-mode="emi">🏦 Loan / EMI Calc</button>
+              <button type="button" class="calc-mode-btn" data-calc-mode="gst">🧾 GST &amp; Discount</button>
+            </div>
+
+            <!-- Sub-panel A: Standard & Scientific Calculator -->
+            <div class="calc-subpanel active" id="calc-standard">
+              <div class="calc-layout">
+                <div class="calc-device">
+                  <div class="calc-screen">
+                    <div class="calc-expr" id="calcExpr">0</div>
+                    <div class="calc-result" id="calcResult">0</div>
+                  </div>
+                  <div class="calc-keys">
+                    <button type="button" class="ckey ckey-fn" data-calc-act="clear">AC</button>
+                    <button type="button" class="ckey ckey-fn" data-calc-act="back">⌫</button>
+                    <button type="button" class="ckey ckey-fn" data-calc-val="%">%</button>
+                    <button type="button" class="ckey ckey-op" data-calc-val="/">÷</button>
+
+                    <button type="button" class="ckey ckey-fn" data-calc-act="sqrt">√x</button>
+                    <button type="button" class="ckey ckey-fn" data-calc-act="sq">x²</button>
+                    <button type="button" class="ckey ckey-fn" data-calc-val="(">(</button>
+                    <button type="button" class="ckey ckey-fn" data-calc-val=")">)</button>
+
+                    <button type="button" class="ckey" data-calc-val="7">7</button>
+                    <button type="button" class="ckey" data-calc-val="8">8</button>
+                    <button type="button" class="ckey" data-calc-val="9">9</button>
+                    <button type="button" class="ckey ckey-op" data-calc-val="*">×</button>
+
+                    <button type="button" class="ckey" data-calc-val="4">4</button>
+                    <button type="button" class="ckey" data-calc-val="5">5</button>
+                    <button type="button" class="ckey" data-calc-val="6">6</button>
+                    <button type="button" class="ckey ckey-op" data-calc-val="-">−</button>
+
+                    <button type="button" class="ckey" data-calc-val="1">1</button>
+                    <button type="button" class="ckey" data-calc-val="2">2</button>
+                    <button type="button" class="ckey" data-calc-val="3">3</button>
+                    <button type="button" class="ckey ckey-op" data-calc-val="+">+</button>
+
+                    <button type="button" class="ckey ckey-zero" data-calc-val="0">0</button>
+                    <button type="button" class="ckey" data-calc-val=".">.</button>
+                    <button type="button" class="ckey ckey-eq" data-calc-act="eval">=</button>
+                  </div>
+                </div>
+
+                <div class="studio-output-wrap">
+                  <div class="output-bar">
+                    <span class="output-title">Calculation History</span>
+                    <button type="button" class="copy-btn" id="clearCalcHistBtn">Clear</button>
+                  </div>
+                  <div class="calc-history" id="calcHistory">
+                    <span class="placeholder-text">Your recent calculations appear here...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-panel B: EMI Loan Calculator -->
+            <div class="calc-subpanel" id="calc-emi">
+              <div class="studio-grid">
+                <div class="studio-controls">
+                  <label class="field-label" for="emiPrincipal">Loan Amount (₹): <strong id="emiPrincipalVal">₹5,00,000</strong></label>
+                  <input id="emiPrincipal" type="range" min="25000" max="10000000" step="25000" value="500000" class="studio-range" />
+
+                  <label class="field-label" for="emiRate" style="margin-top: 16px;">Interest Rate (% p.a.): <strong id="emiRateVal">9.5%</strong></label>
+                  <input id="emiRate" type="range" min="4" max="24" step="0.25" value="9.5" class="studio-range" />
+
+                  <label class="field-label" for="emiYears" style="margin-top: 16px;">Tenure (Years): <strong id="emiYearsVal">5 Years</strong></label>
+                  <input id="emiYears" type="range" min="1" max="30" step="1" value="5" class="studio-range" />
+                </div>
+
+                <div class="studio-output-wrap">
+                  <div class="output-bar">
+                    <span class="output-title">Monthly EMI Breakdown</span>
+                    <span class="mini-badge">Instant</span>
+                  </div>
+                  <div class="calc-stat-grid">
+                    <div class="calc-stat-card highlight">
+                      <span>Monthly EMI</span>
+                      <strong id="emiMonthlyOut">₹10,501</strong>
+                    </div>
+                    <div class="calc-stat-card">
+                      <span>Total Interest</span>
+                      <strong id="emiInterestOut">₹1,30,056</strong>
+                    </div>
+                    <div class="calc-stat-card">
+                      <span>Total Payable</span>
+                      <strong id="emiTotalOut">₹6,30,056</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-panel C: GST & Discount Calculator -->
+            <div class="calc-subpanel" id="calc-gst">
+              <div class="studio-grid">
+                <div class="studio-controls">
+                  <label class="field-label" for="gstAmount">Base Price / MRP (₹)</label>
+                  <input id="gstAmount" type="number" class="studio-input" value="1000" min="0" />
+
+                  <div class="control-row" style="margin-top: 12px;">
+                    <div class="control-group">
+                      <label class="field-label" for="gstRate">GST Slab (%)</label>
+                      <select id="gstRate" class="studio-select">
+                        <option value="0">0% (No GST)</option>
+                        <option value="5">5% GST</option>
+                        <option value="12">12% GST</option>
+                        <option value="18" selected>18% GST</option>
+                        <option value="28">28% GST</option>
+                      </select>
+                    </div>
+                    <div class="control-group">
+                      <label class="field-label" for="discountPct">Discount (%)</label>
+                      <input id="discountPct" type="number" class="studio-input" value="10" min="0" max="100" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="studio-output-wrap">
+                  <div class="output-bar">
+                    <span class="output-title">Price &amp; Tax Summary</span>
+                    <span class="mini-badge">Live</span>
+                  </div>
+                  <div class="calc-stat-grid">
+                    <div class="calc-stat-card">
+                      <span>You Save (Discount)</span>
+                      <strong id="gstSavedOut">₹100.00</strong>
+                    </div>
+                    <div class="calc-stat-card">
+                      <span>GST Amount</span>
+                      <strong id="gstTaxOut">₹162.00</strong>
+                    </div>
+                    <div class="calc-stat-card highlight">
+                      <span>Final Total</span>
+                      <strong id="gstFinalOut">₹1,062.00</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 8: IMAGE RESIZER & FORMAT CONVERTER -->
+          <div class="studio-panel" id="panel-imgtool">
+            <div class="studio-grid">
+              <div class="studio-controls">
+                <div class="dropzone" id="imgDropzone">
+                  <input id="imgUploadInput" type="file" accept="image/*" hidden />
+                  <div class="dropzone-icon">📁</div>
+                  <div class="dropzone-text">
+                    <strong>Click or Drag &amp; Drop Image Here</strong>
+                    <span>Supports PNG, JPG, WEBP, GIF, BMP</span>
+                  </div>
+                </div>
+
+                <div class="control-row" style="margin-top: 14px;">
+                  <div class="control-group">
+                    <label class="field-label" for="resizeWidth">Width (px)</label>
+                    <input id="resizeWidth" type="number" class="studio-input" min="16" max="8000" value="800" />
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="resizeHeight">Height (px)</label>
+                    <input id="resizeHeight" type="number" class="studio-input" min="16" max="8000" value="600" />
+                  </div>
+                </div>
+
+                <label class="ratio-lock-row">
+                  <input id="lockAspectRatio" type="checkbox" checked />
+                  <span>🔒 Lock Aspect Ratio (maintain original shape)</span>
+                </label>
+
+                <div class="quick-presets" style="margin: 10px 0 12px;">
+                  <span>Quick Size:</span>
+                  <button type="button" class="preset-chip" data-resize-scale="0.5">50% Smaller</button>
+                  <button type="button" class="preset-chip" data-resize-scale="2">2x Larger</button>
+                  <button type="button" class="preset-chip" data-resize-exact="1080x1080">1080×1080</button>
+                  <button type="button" class="preset-chip" data-resize-exact="1280x720">1280×720</button>
+                  <button type="button" class="preset-chip" data-resize-scale="1">Original</button>
+                </div>
+
+                <div class="control-row">
+                  <div class="control-group">
+                    <label class="field-label" for="convertFormat">Output Format</label>
+                    <select id="convertFormat" class="studio-select">
+                      <option value="image/webp">WEBP (Smallest Size)</option>
+                      <option value="image/jpeg">JPG / JPEG</option>
+                      <option value="image/png">PNG (Lossless)</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                    <label class="field-label" for="convertQuality">Quality: <span id="convertQualityVal">85%</span></label>
+                    <input id="convertQuality" type="range" min="10" max="100" step="5" value="85" class="studio-range" />
+                  </div>
+                </div>
+
+                <div class="btn-row" style="margin-top: 16px;">
+                  <button type="button" class="btn btn-primary" id="applyResizeBtn" style="flex: 1;">
+                    <span>⚡ Resize &amp; Convert</span>
+                  </button>
+                  <button type="button" class="btn btn-glass" id="downloadConvertedBtn">
+                    <span>⬇ Download</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="studio-output-wrap">
+                <div class="output-bar">
+                  <span class="output-title">Converted Output Preview</span>
+                  <span class="mini-badge" id="convertSavedBadge">Waiting for image</span>
+                </div>
+                <div class="metrics-strip">
+                  <div class="metric-pill">Original: <strong id="origImgInfo">—</strong></div>
+                  <div class="metric-pill">New: <strong id="newImgInfo">—</strong></div>
+                </div>
+                <div class="image-stage" style="min-height: 280px;">
+                  <span class="placeholder-text" id="imgToolPlaceholder">Upload an image on the left (or click "Resize &amp; Convert" to test with a sample image)</span>
+                  <img id="convertedPreviewImg" class="ai-img-preview" alt="Converted image preview" style="display: none;" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLEAN ADSENSE SLOT #1 (Below Playground — Non-Intrusive) -->
+    <section class="ad-banner-wrap" aria-label="Advertisement">
+      <div class="container">
+        <div class="ad-slot-card" id="ad-slot-leaderboard">
+          <span class="ad-label">ADVERTISEMENT</span>
+          <div class="ad-slot-inner">
+            <!-- Replace with your Google AdSense <ins class="adsbygoogle" ...></ins> unit -->
+            <p class="ad-placeholder-title">Google AdSense Responsive Banner (728×90 / Auto)</p>
+            <p class="ad-placeholder-sub">Cleanly placed below the Live AI Studio so tools &amp; animations stay 100% distraction-free.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AFFILIATE PARTNER TOOLS SECTION -->
+    <section class="section" id="affiliates">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">CURATED AI STACK</span>
+          <h2>Recommended <span class="gradient-text">Pro AI Partners</span></h2>
+          <p>Need heavy cloud rendering, 4K AI video, or ultra-realistic voices? Explore our top partner tools.</p>
+        </div>
+
+        <div class="affiliate-grid">
+          <article class="affiliate-card tilt-card reveal">
+            <div class="aff-top">
+              <span class="aff-icon">🎬</span>
+              <span class="aff-tag">Up to 30% Off</span>
+            </div>
+            <h3>AI Video &amp; Avatar Studio</h3>
+            <p>Turn AetherAI scripts into talking-head Reels &amp; YouTube Shorts in 60 seconds with auto captions.</p>
+            <a href="#aff-video-link" rel="sponsored noopener noreferrer" class="aff-cta" data-partner="AI Video Studio">Explore Partner Tool →</a>
+          </article>
+
+          <article class="affiliate-card tilt-card reveal delay-1">
+            <div class="aff-top">
+              <span class="aff-icon">🖼️</span>
+              <span class="aff-tag">Free Credits</span>
+            </div>
+            <h3>4K Photorealistic Art Cloud</h3>
+            <p>Paste your enhanced AetherAI Art Lab prompts to generate ultra-HD commercial visuals &amp; logos.</p>
+            <a href="#aff-image-link" rel="sponsored noopener noreferrer" class="aff-cta" data-partner="4K AI Art Cloud">Try Free Credits →</a>
+          </article>
+
+          <article class="affiliate-card tilt-card reveal delay-2">
+            <div class="aff-top">
+              <span class="aff-icon">🎧</span>
+              <span class="aff-tag">Creator Pick</span>
+            </div>
+            <h3>Neural Voice Dubbing Pro</h3>
+            <p>Clone voices and dub videos into Gujarati, Hindi, and 29+ languages with studio emotion.</p>
+            <a href="#aff-voice-link" rel="sponsored noopener noreferrer" class="aff-cta" data-partner="Neural Voice Pro">Listen Demo →</a>
+          </article>
+
+          <article class="affiliate-card tilt-card reveal">
+            <div class="aff-top">
+              <span class="aff-icon">🌐</span>
+              <span class="aff-tag">75% Hosting Deal</span>
+            </div>
+            <h3>Fast AI Web Hosting</h3>
+            <p>Launch your own Code Architect sites online with free SSL, custom domain, and NVMe speed.</p>
+            <a href="#aff-host-link" rel="sponsored noopener noreferrer" class="aff-cta" data-partner="Fast AI Hosting">Claim Deal →</a>
+          </article>
+        </div>
+
+        <p class="disclosure-note">Disclosure: Some partner links above are affiliate links. If you upgrade through them, AetherAI may earn a small commission at zero extra cost to you.</p>
+      </div>
+    </section>
+
+    <!-- PRO PRICING & RAZORPAY UPGRADE SECTION -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">FREEMIUM &amp; PRO</span>
+          <h2>Start Free. <span class="gradient-text">Upgrade When You Scale.</span></h2>
+          <p>Keep using all 9 AI &amp; utility tools free forever, or unlock Pro cloud power with instant UPI / Razorpay checkout.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <article class="pricing-card reveal">
+            <div class="plan-name">Starter</div>
+            <div class="plan-price">₹0 <span>/ forever</span></div>
+            <p class="plan-desc">Everything currently in AetherAI Studio — zero login required.</p>
+            <ul class="plan-features">
+              <li>✓ All 9 Interactive AI &amp; Utility Tools</li>
+              <li>✓ AI Images, PDF Maker &amp; Image Resizer</li>
+              <li>✓ 3 Neon Animated Themes</li>
+              <li>✓ Free Daily AI Credits</li>
+            </ul>
+            <a href="#playground" class="btn btn-glass btn-full">Use Free Now</a>
+          </article>
+
+          <article class="pricing-card pricing-featured reveal delay-1">
+            <div class="plan-badge">MOST POPULAR</div>
+            <div class="plan-name">Pro Creator</div>
+            <div class="plan-price">₹199 <span>/ month</span></div>
+            <p class="plan-desc">For creators &amp; freelancers who want cloud AI speed &amp; exports.</p>
+            <ul class="plan-features">
+              <li>✓ Everything in Starter Free</li>
+              <li>✓ Cloud LLM Mode (Gemini / GPT Ready)</li>
+              <li>✓ Bulk Script &amp; Code Pack Exports</li>
+              <li>✓ Ad-Free Clean Workspace</li>
+            </ul>
+            <button type="button" class="btn btn-primary btn-full upgrade-trigger" data-plan="Pro Creator" data-amount="199" data-cycle="Monthly">
+              <span>⚡ Upgrade via Razorpay / UPI</span>
+            </button>
+          </article>
+
+          <article class="pricing-card reveal delay-2">
+            <div class="plan-name">Lifetime Studio</div>
+            <div class="plan-price">₹999 <span>/ one-time</span></div>
+            <p class="plan-desc">Pay once, unlock all future AI templates &amp; commercial rights.</p>
+            <ul class="plan-features">
+              <li>✓ All Pro Creator Features Forever</li>
+              <li>✓ Commercial Client License</li>
+              <li>✓ Custom Brand White-Label Ready</li>
+              <li>✓ Priority Support &amp; Updates</li>
+            </ul>
+            <button type="button" class="btn btn-glass btn-full upgrade-trigger" data-plan="Lifetime Studio" data-amount="999" data-cycle="One-Time">
+              <span>👑 Unlock Lifetime</span>
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANIMATED WORKFLOW SECTION -->
+    <section class="section" id="workflow">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">ARCHITECTURE</span>
+          <h2>How The <span class="gradient-text">Animation & AI Flow</span> Works</h2>
+          <p>Smooth GPU-accelerated motion paired with instant local execution.</p>
+        </div>
+
+        <div class="workflow-track reveal">
+          <div class="workflow-step">
+            <div class="step-num">01</div>
+            <h3>Pick Any Tool</h3>
+            <p>Choose Writer, Code, Art, Summarizer, or Voice — zero login screens or waitlists.</p>
+          </div>
+
+          <div class="workflow-connector" aria-hidden="true">
+            <svg viewBox="0 0 120 24" fill="none">
+              <path class="flow-path" d="M2 12H114" stroke="url(#flowGrad)" stroke-width="2.5" stroke-dasharray="6 6" stroke-linecap="round"/>
+              <circle class="flow-dot" cx="10" cy="12" r="4" fill="#22d3ee"/>
+              <defs>
+                <linearGradient id="flowGrad" x1="0" y1="12" x2="120" y2="12" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#a855f7"/>
+                  <stop offset="1" stop-color="#06b6d4"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">02</div>
+            <h3>Neural Synthesis</h3>
+            <p>Inputs are transformed in real time with streaming feedback and interactive visuals.</p>
+          </div>
+
+          <div class="workflow-connector" aria-hidden="true">
+            <svg viewBox="0 0 120 24" fill="none">
+              <path class="flow-path" d="M2 12H114" stroke="url(#flowGrad2)" stroke-width="2.5" stroke-dasharray="6 6" stroke-linecap="round"/>
+              <circle class="flow-dot" cx="10" cy="12" r="4" fill="#a855f7"/>
+              <defs>
+                <linearGradient id="flowGrad2" x1="0" y1="12" x2="120" y2="12" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#06b6d4"/>
+                  <stop offset="1" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">03</div>
+            <h3>Copy or Download</h3>
+            <p>One-click copy for text/code or export high-res generative art PNGs instantly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLEAN ADSENSE SLOT #2 (Above FAQ) -->
+    <section class="ad-banner-wrap" aria-label="Advertisement">
+      <div class="container">
+        <div class="ad-slot-card" id="ad-slot-mid">
+          <span class="ad-label">SPONSORED / AD UNIT</span>
+          <div class="ad-slot-inner">
+            <!-- Replace with Google AdSense In-Feed / Multiplex unit -->
+            <p class="ad-placeholder-title">AdSense Multiplex / In-Article Unit</p>
+            <p class="ad-placeholder-sub">High-visibility placement between Workflow and FAQ sections.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="section" id="faq">
+      <div class="container faq-container">
+        <div class="section-header reveal">
+          <span class="eyebrow">QUESTIONS</span>
+          <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+        </div>
+
+        <div class="faq-list reveal">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Is AetherAI really 100% free with no hidden limits?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! All tools, animations, prompt builders, procedural art rendering, text analysis, and browser voice synthesis run locally with zero subscriptions or paywalls.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Can I customize the colors and connect a live cloud AI API later?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely. You can switch themes live from the top navbar, and the modular <code>app.js</code> file is structured so you can plug in any OpenAI, Gemini, or Groq API endpoint whenever you want.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Does it work on mobile phones and tablets?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes, the entire layout is responsive with smooth touch-friendly controls, mobile drawer navigation, and performance-tuned canvas animations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="brand">
+          <span class="brand-name">Aether<span class="gradient-text">AI</span></span>
+        </div>
+        <p class="footer-note">Built as a flagship animated Free AI Tool website — pure HTML, CSS &amp; JS.</p>
+      </div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL (LOGIN / REGISTER) -->
+  <div class="cmd-modal" id="authModal" aria-hidden="true">
+    <div class="cmd-backdrop" id="authBackdrop"></div>
+    <div class="upgrade-dialog" role="dialog" aria-label="Account Login or Sign Up">
+      <div class="upgrade-header">
+        <div>
+          <span class="eyebrow" style="margin-bottom: 4px;">AETHERAI ACCOUNT</span>
+          <h3 id="authModalTitle">Login to Your Account</h3>
+        </div>
+        <button type="button" id="authClose" class="cmd-esc">ESC</button>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-auth-mode="login">Login</button>
+        <button type="button" class="auth-tab" data-auth-mode="register">Create Free Account</button>
+      </div>
+
+      <form id="authForm" class="upgrade-form">
+        <div id="authNameWrap" style="display: none; margin-bottom: 12px;">
+          <label class="field-label" for="authName">Full Name</label>
+          <input id="authName" type="text" class="studio-input" placeholder="e.g., Aarav Patel" />
+        </div>
+
+        <label class="field-label" for="authEmail">Email Address</label>
+        <input id="authEmail" type="email" class="studio-input" placeholder="you@example.com" required />
+
+        <label class="field-label" for="authPassword" style="margin-top: 12px;">Password</label>
+        <input id="authPassword" type="password" class="studio-input" placeholder="Minimum 4 characters" minlength="4" required />
+
+        <p class="auth-hint" id="authHint">Login to get 5 free daily AI credits — or upgrade to Pro for unlimited access!</p>
+
+        <button type="submit" class="btn btn-primary btn-full" id="authSubmitBtn" style="margin-top: 14px;">
+          <span>Login →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- RAZORPAY / PRO UPGRADE MODAL -->
+  <div class="cmd-modal" id="upgradeModal" aria-hidden="true">
+    <div class="cmd-backdrop" id="upgradeBackdrop"></div>
+    <div class="upgrade-dialog" role="dialog" aria-label="Upgrade to AetherAI Pro">
+      <div class="upgrade-header">
+        <div>
+          <span class="eyebrow" style="margin-bottom: 4px;">INSTANT CHECKOUT</span>
+          <h3 id="modalPlanTitle">Upgrade to Pro Creator</h3>
+        </div>
+        <button type="button" id="upgradeClose" class="cmd-esc">ESC</button>
+      </div>
+
+      <div class="upgrade-price-box">
+        <div>
+          <strong id="modalPlanAmount">₹199</strong>
+          <span id="modalPlanCycle">Monthly</span>
+        </div>
+        <span class="mini-badge">UPI • Cards • NetBanking</span>
+      </div>
+
+      <form id="razorpayForm" class="upgrade-form">
+        <label class="field-label" for="checkoutName">Your Name</label>
+        <input id="checkoutName" type="text" class="studio-input" placeholder="e.g., Aarav Patel" required />
+
+        <label class="field-label" for="checkoutEmail" style="margin-top: 12px;">Email for Pro License Key</label>
+        <input id="checkoutEmail" type="email" class="studio-input" placeholder="you@example.com" required />
+
+        <div class="rzp-note">
+          🔒 Powered by <strong>Razorpay Checkout</strong>. (Demo mode active — replace <code>RAZORPAY_KEY_ID</code> in <code>app.js</code> when going live.)
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top: 14px;">
+          <span>Pay &amp; Activate Pro Instantly →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- COMMAND PALETTE MODAL (Ctrl+K) -->
+  <div class="cmd-modal" id="cmdModal" aria-hidden="true">
+    <div class="cmd-backdrop" id="cmdBackdrop"></div>
+    <div class="cmd-dialog" role="dialog" aria-label="Quick AI Launcher">
+      <div class="cmd-search-wrap">
+        <span>🔍</span>
+        <input type="text" id="cmdInput" placeholder="Jump to AI tool or switch theme... (e.g., Writer, Art, Emerald)" />
+        <button id="cmdClose" class="cmd-esc">ESC</button>
+      </div>
+      <div class="cmd-list" id="cmdList">
+        <button class="cmd-item" data-cmd-tab="chat">💬 Launch Normal AI Chat</button>
+        <button class="cmd-item" data-cmd-tab="image">🎨 Launch Real AI Image Generator</button>
+        <button class="cmd-item" data-cmd-tab="writer">✍️ Launch AI Content &amp; Script Writer</button>
+        <button class="cmd-item" data-cmd-tab="code">⚡ Launch Code &amp; Regex Architect</button>
+        <button class="cmd-item" data-cmd-tab="summary">🧠 Launch Smart Summarizer</button>
+        <button class="cmd-item" data-cmd-tab="voice">🎙️ Launch AI Voice Synthesizer</button>
+        <button class="cmd-item" data-cmd-tab="pdf">📄 Launch Instant PDF Maker</button>
+        <button class="cmd-item" data-cmd-tab="calc">🧮 Launch Smart Calculator Hub</button>
+        <button class="cmd-item" data-cmd-tab="imgtool">📐 Launch Image Resizer &amp; Converter</button>
+        <button class="cmd-item" data-cmd-theme="violet">🟣 Switch Theme: Cyber Violet</button>
+        <button class="cmd-item" data-cmd-theme="emerald">🟢 Switch Theme: Emerald Matrix</button>
+        <button class="cmd-item" data-cmd-theme="solar">🟠 Switch Theme: Solar Gold</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
