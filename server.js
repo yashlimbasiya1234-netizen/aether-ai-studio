@@ -26,7 +26,7 @@ function loadApiKeys() {
     openaiApiKey: process.env.OPENAI_API_KEY || fileKeys.openaiApiKey || "",
     razorpayKeyId: process.env.RAZORPAY_KEY_ID || fileKeys.razorpayKeyId || "",
     adsenseClientId: process.env.ADSENSE_CLIENT_ID || fileKeys.adsenseClientId || "",
-    merchantUpiId: process.env.MERCHANT_UPI_ID || fileKeys.merchantUpiId || "",
+    merchantUpiId: process.env.MERCHANT_UPI_ID || fileKeys.merchantUpiId || "yashlimbasiya1234-2@okaxis",
     merchantName: process.env.MERCHANT_NAME || fileKeys.merchantName || "AetherAI Studio",
     bankAccountInfo: process.env.BANK_ACCOUNT_INFO || fileKeys.bankAccountInfo || "",
   };

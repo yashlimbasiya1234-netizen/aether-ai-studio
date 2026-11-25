@@ -885,7 +885,7 @@ LIMIT 10;`,
   --------------------------------------------------- */
   let RAZORPAY_KEY_ID = "rzp_test_REPLACE_WITH_YOUR_KEY";
   let serverConfigured = { gemini: false, huggingface: false, groq: false, openai: false, razorpay: false, adsense: false };
-  let paymentConfig = { upiId: "", merchantName: "AetherAI Studio", bankInfo: "" };
+  let paymentConfig = { upiId: "yashlimbasiya1234-2@okaxis", merchantName: "AetherAI Studio", bankInfo: "" };
 
   function refreshUpiCheckoutBox() {
     const upiLine = $("#displayUpiId");
